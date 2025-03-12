@@ -1,21 +1,19 @@
 package main
 
 import (
-	"encoding/json"
+	"GoPlay/controller"
+	"GoPlay/models"
+	"log"
 	"net/http"
-	"structs"
 )
 
 func main() {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodGet {
-			data := structs.Response{
-				Code: http.StatusOK,
-				Body: "Pong",
-			}
-			json.NewEncoder(w).Encode(data)
-		}
-	})
+	mux := controller.Register()
+	db, err := models.Connect()
+	if err != nil {
+		log.Fatal("Database connection error:", err)
+	}
+	models.CreateTodo()
+	defer db.Close()
 	http.ListenAndServe("localhost:3000", mux)
 }
