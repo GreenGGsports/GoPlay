@@ -13,7 +13,6 @@ func main() {
 	if err != nil {
 		log.Fatal("Database connection error:", err)
 	}
-	models.CreateTodo()
 	defer db.Close()
 	http.ListenAndServe("localhost:3000", mux)
 }
